@@ -1,2 +1,4 @@
 requests
 pycryptodome
+pytest
+pytest-cov
