@@ -8,9 +8,7 @@ Endpoints:
 /auth/login
 /auth/logout
 /auth/method
-/auth/oauth
 /auth/reset_password
-/auth/thirdparty
 /auth/get_server_config
 """
 
@@ -26,36 +24,31 @@ class Auth(Endpoint):
     @endpoint
     def check(self, response):
         # TODO
+        # JSONError: missing values, device_id und client_key required
         print(f"Response: {response}")
 
     @endpoint
     def login(self, response):
         # TODO
+        # JSONError: missing values, credentials and app data required
         print(f"Response: {response}")
 
     @endpoint
     def logout(self, response):
         # TODO
+        # JSONError: missing values, device_id required
         print(f"Response: {response}")
 
     @endpoint
     def method(self, response):
         # TODO
-        print(f"Response: {response}")
-
-    @endpoint
-    def oath(self, response):
-        # TODO
+        # JSONError: email is required
         print(f"Response: {response}")
 
     @endpoint
     def reset_password(self, response):
         # TODO
-        print(f"Response: {response}")
-
-    @endpoint
-    def thirdparty(self, response):
-        # TODO
+        # JSONError: missing values, email is required and has to be valid
         print(f"Response: {response}")
 
     @endpoint

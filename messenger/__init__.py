@@ -15,6 +15,10 @@ import requests
 from messenger.auth import Auth
 
 
+class JSONError(Exception):
+    pass
+
+
 class Messenger:
     version = "4.8.0"
     headers = {
@@ -47,7 +51,7 @@ class Messenger:
             status = json_content.get("status")
             if status.get("value").upper() != "OK":
                 message = status.get("message", "")
-                raise Exception(f"Response to {url}: {message}")
+                raise JSONError(f"Response to {url}: {message}")
 
         json_content = json_content.get("payload", json_content)
 
