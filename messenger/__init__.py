@@ -44,8 +44,10 @@ class Messenger:
         json_content = response.json()
 
         if raise_for_status and json_content.get("status") and json_content.get("status").get("value"):
-            json_status = json_content.get("status").get("value").upper()
-            assert json_status == "OK", f"JSON status is not ok: {json_status}"
+            status = json_content.get("status")
+            if status.get("value").upper() != "OK":
+                message = status.get("message", "")
+                raise Exception(f"Response to {url}: {message}")
 
         json_content = json_content.get("payload", json_content)
 

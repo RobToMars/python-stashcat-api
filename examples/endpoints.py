@@ -11,4 +11,5 @@ from messenger.logger import set_logger
 if __name__ == '__main__':
     set_logger("DEBUG")
     client = Messenger()
-    auth_get_server_config = client.auth.get_server_config()
+    response = client.auth.get_server_config()
+    print(response)
