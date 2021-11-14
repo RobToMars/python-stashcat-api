@@ -13,6 +13,7 @@ import requests
 
 # Package Python library
 from messenger.auth import Auth
+from messenger.account import Account
 
 
 class JSONError(Exception):
@@ -33,6 +34,7 @@ class Messenger:
     def __init__(self, *, root_endpoint: str = "https://api.stashcat.com"):
         self.root_endpoint = root_endpoint
         self.auth = Auth(self)
+        self.account = Account(self)
 
     def post(self, end_point: str, data=None, json_data=None, headers: dict = None, raise_for_status: bool = True):
         if headers is None:

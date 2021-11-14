@@ -37,7 +37,7 @@ def _test_availability(endpoint_methods):
         time.sleep(0.5)  # Do not flood API
 
     if errors:
-        raise Exception("Endpoint/s with error")
+        raise Exception("Endpoint.s with error")
 
 
 def test_auth_endpoint_availability():
@@ -50,3 +50,22 @@ def test_auth_endpoint_availability():
         messenger.auth.get_server_config: None
     }
     _test_availability(auth_endpoint_methods)
+
+
+def test_account_endpoint_availability():
+    account_endpoint_methods = {
+        messenger.account.change_email: None,
+        messenger.account.change_password: None,
+        messenger.account.change_status: None,
+        messenger.account.deactivate_device: None,
+        messenger.account.delete: None,
+        messenger.account.list_active_devices: None,
+        messenger.account.muted: None,
+        messenger.account.settings: None,
+        messenger.account.toggle_device_notifications: None,
+        messenger.account.toggle_notifications: None,
+        messenger.account.toggle_online_status: None,
+        messenger.account.toggle_read_status: None
+    }
+    _test_availability(account_endpoint_methods)
+
