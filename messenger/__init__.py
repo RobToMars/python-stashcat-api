@@ -12,9 +12,7 @@ import logging
 import requests
 
 # Package Python library
-from messenger.auth import Auth
-from messenger.account import Account
-from messenger.channels import Channels
+from messenger.endpoint import Endpoint
 
 
 class JSONError(Exception):
@@ -22,7 +20,8 @@ class JSONError(Exception):
 
 
 class Messenger:
-    version = "4.8.0"
+    version = "2021-11-16"
+    app_name = f"python-stashcat-api-{version}"
     headers = {
         "Accept": "application/json, text/plain, */*",
         "Accept-Encoding": "gzip, deflate, br",
@@ -34,16 +33,14 @@ class Messenger:
 
     def __init__(self, *, root_endpoint: str = "https://api.stashcat.com"):
         self.root_endpoint = root_endpoint
-        self.auth = Auth(self)
-        self.account = Account(self)
-        self.channels = Channels(self)
+        self.endpoint = Endpoint(messenger=self)
 
-    def post(self, end_point: str, data=None, json_data=None, headers: dict = None, raise_for_status: bool = True):
+    def post(self, endpoint: str, data=None, json_data=None, headers: dict = None, raise_for_status: bool = True):
         if headers is None:
             headers = {}
         headers.update(self.headers)
 
-        url = f"{self.root_endpoint}{end_point}"
+        url = f"{self.root_endpoint}{endpoint}"
         response = requests.post(url, data=data, json=json_data, headers=headers)
 
         if raise_for_status:

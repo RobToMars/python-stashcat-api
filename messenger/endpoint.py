@@ -9,30 +9,57 @@ from typing import Union, Callable
 
 
 class Endpoint:
-
-    middleware = set()
-    endpoints = set()
-
-    @classmethod
-    def __init_subclass__(cls, **kwargs):
-        cls.middleware.update(cls.__name__)
+    name = ""
+    children = []
 
     @classmethod
-    def add_end_point(cls, end_point):
-        # TODO: Register all endpoints during loading of the modules
-        if end_point not in cls.endpoints:
-            cls.endpoints.update(end_point)
-            print(f"Added endpoint: {end_point}")
+    def __init_subclass__(cls):
+        if issubclass(cls, Endpoint):
+            cls.children = []
+            cls.__base__.children.append(cls)
+        else:
+            raise NotImplementedError
+
+    @classmethod
+    def get_endpoint(cls):
+        parent = ""
+        if issubclass(cls.__base__, Endpoint):
+            parent = cls.__base__.get_endpoint()
+
+        if cls.name:
+            return f"{parent}/{cls.name}"
+        else:
+            return f"{parent}"
+
+    def __init__(self, **kwargs):
+        self.endpoint = self.get_endpoint()
+        self.root = kwargs.get("root", self)
+        self.messenger = kwargs.get("messenger", None)
+
+        for child in self.children:
+            instance = child(root=self.root, messenger=self.messenger)
+            setattr(self, child.name, instance)
+
+    def __call__(self, *args, **kwargs):
+        print(f"{self.endpoint} + {args} + {kwargs}\n")
+        response = self.root.messenger.post(*args, endpoint=self.endpoint, **kwargs)
+        return self.process_response(response)
+
+    def process_response(self, response):
+        raise NotImplementedError
 
 
-def endpoint(func: Union[classmethod, staticmethod, Callable]) -> Callable:
-    def wrapper(instance, *args, **kwargs):
-        end_point = f"/{instance.name}/{func.__name__}"
-        Endpoint.add_end_point(end_point)
-        response = instance.messenger.post(end_point=end_point)
+class Auth(Endpoint):
+    name = "auth"
 
-        assert callable(func), f"{func.__name__} needs to be callable in order to be wrapped by endpoint"
+    def process_response(self, response):
+        print(f"Response {response}")
 
-        return func(instance, *args, response=response, **kwargs)
 
-    return wrapper
+class GetServerConfig(Auth):
+    name = "get_server_config"
+
+    def process_response(self, response):
+        print(f"Messenger {self.messenger}")
+        print(f"Endpoint {self.root}")
+        print(f"Response {response}")
