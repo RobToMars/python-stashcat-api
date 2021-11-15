@@ -14,6 +14,7 @@ import requests
 # Package Python library
 from messenger.auth import Auth
 from messenger.account import Account
+from messenger.channels import Channels
 
 
 class JSONError(Exception):
@@ -35,6 +36,7 @@ class Messenger:
         self.root_endpoint = root_endpoint
         self.auth = Auth(self)
         self.account = Account(self)
+        self.channels = Channels(self)
 
     def post(self, end_point: str, data=None, json_data=None, headers: dict = None, raise_for_status: bool = True):
         if headers is None:
