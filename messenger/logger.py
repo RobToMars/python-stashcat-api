@@ -10,7 +10,8 @@ import http.client
 
 
 def set_logger(level=logging.DEBUG) -> logging.Logger:
-    logging.basicConfig()
+    formatting = "%(asctime)s %(levelname)s %(name)s %(module)s.%(funcName)s:%(lineno)d - %(message)s"
+    logging.basicConfig(format=formatting)
     logger = logging.getLogger()
     logger.setLevel(level)
 
